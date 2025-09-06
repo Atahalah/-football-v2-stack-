@@ -1,0 +1,19 @@
+```gitignore
+# Secrets
+.env
+*.key
+
+# Python
+__pycache__/
+*.pyc
+
+# Data (regenerable)
+data/bronze/*.parquet
+data/silver/
+data/gold/
+models/*.pkl
+
+# IDE/OS files
+.vscode/
+.DS_Store
+```

@@ -1,0 +1,8 @@
+**Use Git LFS (Recommended):**
+```bash
+git lfs install
+git lfs track "*.parquet" "*.pkl"
+git add .gitattributes
+git commit -m "Add LFS tracking"
+git push
+```

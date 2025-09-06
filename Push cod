@@ -1,0 +1,7 @@
+```bash
+git init
+git add .
+git commit -m "Initial commit: football prediction stack"
+git remote add origin https://github.com/YOUR_USER/football-v2-stack.git
+git branch -M main
+git push -u origin main

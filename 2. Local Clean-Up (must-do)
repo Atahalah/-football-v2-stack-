@@ -1,0 +1,12 @@
+# enter project folder
+cd football-v2-stack
+
+# remove ENV secrets & runtime artefacts
+rm -f .env                      # contains only NON_COMMERCIAL=true – regenerate later
+find . -type f -name "*.pyc" -delete
+find . -type d -name "__pycache__" -exec rm -rf {} +
+find . -type d -name ".pytest_cache" -exec rm -rf {} +
+
+# OPTIONAL: delete huge files (if > 100 MB)
+rm -f data/bronze/*.parquet     # will be re-created by ingest
+rm -f models/*.pkl              # will be re-trained

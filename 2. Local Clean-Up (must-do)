@@ -10,3 +10,259 @@ find . -type d -name ".pytest_cache" -exec rm -rf {} +
 # OPTIONAL: delete huge files (if > 100 MB)
 rm -f data/bronze/*.parquet     # will be re-created by ingest
 rm -f models/*.pkl              # will be re-trained
+
+📦 Push the ENTIRE Football-v2 Stack to GitHub  
+(no secrets, no large files, 100 % reproducible)
+
+---
+
+1. Create a NEW GitHub Repository (blank, no README)
+
+- Log in → ➕ “New repository”  
+- Name: `football-v2-stack` (or any)  
+- Public (keeps free license visible)  
+- DO NOT add README / .gitignore / license yet → “Create repo”
+
+Copy the quick-setup commands GitHub shows (we’ll use them in step 4).
+
+---
+
+2. Local Clean-Up (must-do)
+
+```bash
+# enter project folder
+cd football-v2-stack
+
+# remove ENV secrets & runtime artefacts
+rm -f .env                      # contains only NON_COMMERCIAL=true – regenerate later
+find . -type f -name "*.pyc" -delete
+find . -type d -name "__pycache__" -exec rm -rf {} +
+find . -type d -name ".pytest_cache" -exec rm -rf {} +
+
+# OPTIONAL: delete huge files (if > 100 MB)
+rm -f data/bronze/*.parquet     # will be re-created by ingest
+rm -f models/*.pkl              # will be re-trained
+```
+
+---
+
+3. Add Smart `.gitignore` (prevents pushing secrets / blobs)
+
+```bash
+cat > .gitignore <<'EOF'
+# Secrets
+.env
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+
+# Data & models (regenerable)
+data/bronze/*.parquet
+data/silver/
+data/gold/
+models/*.pkl
+mlruns/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Large notebooks outputs
+notebooks/*.csv
+notebooks/*.parquet
+EOF
+```
+
+---
+
+4. Push Code & Structure (NO large data)
+
+```bash
+# 1. initialise local repo
+git init
+git add .
+git commit -m "Initial commit: free football prediction v2 stack"
+
+# 2. add GitHub remote (use YOUR url)
+git remote add origin https://github.com/YOUR_USER/football-v2-stack.git
+git branch -M main
+
+# 3. push
+git push -u origin main
+```
+
+---
+
+5. Handle Large Data / Models (> 100 MB)  
+GitHub blocks > 100 MB per file.
+
+Option A: Git-LFS (simplest, keeps repo clone-able)
+
+```bash
+# install git-lfs (once)
+git lfs install
+
+# track big file types
+git lfs track "*.parquet"
+git lfs track "*.pkl"
+git lfs track "mlruns/*"
+
+git add .gitattributes
+git commit -m "Track large files with LFS"
+
+# add regenerated data (after local train)
+./scripts/train.sh              # creates models/*.pkl & delta tables
+git add models/*.pkl data/gold/*.parquet
+git commit -m "Add trained model & gold data (LFS)"
+git push
+```
+
+Option B: GitHub Release Assets (no LFS)
+
+```bash
+# compress & upload via web UI
+tar -czf gold-2024-09-01.tgz data/gold/
+# → drag into release https://github.com/YOUR_USER/football-v2-stack/releases
+```
+
+Option C: External Bucket (S3, GDrive, etc.)  
+put download link in README.
+
+---
+
+6. Create README for Cloners
+
+```markdown
+# Football-v2 Stack | Free & Non-Commercial
+
+⚽ Global prediction system: 20 k+ matches, 100+ leagues, 100 % free data.  
+Built with PySpark, FastAPI, Streamlit, Docker.
+
+## Quick Start
+```bash
+git clone https://github.com/YOUR_USER/football-v2-stack.git
+cd football-v2-stack
+cp .env.example .env
+docker compose up --build -d
+# open http://localhost:8501
+```
+
+Train Your Own Model
+
+```bash
+docker exec -it football-v2-stack-api-1 bash
+./scripts/train.sh
+```
+
+Data Sources (all free)
+- StatsBomb Open (CC-BY-SA 4.0)
+- Football-Data.co.uk (research)
+- Club-Football Dataset (MIT)
+
+License
+MIT – non-commercial use only (data providers’ condition).
+
+```
+
+---
+
+## 7. Add License File (MIT – code only)
+
+```bash
+cat > LICENSE <<'EOF'
+MIT License
+
+Copyright (c) 2024 Your Name
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+EOF
+git add LICENSE
+git commit -m "Add MIT license (code only)"
+git push
+```
+
+---
+
+8. Enable GitHub Actions (optional CI)
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -r requirements.txt
+      - run: pytest tests/
+      - run: docker compose build
+      - run: docker compose up -d
+      - run: sleep 30 && curl -f http://localhost:8000/health
+      - run: docker compose down
+```
+
+Commit & push → GitHub will run tests on every push.
+
+---
+
+9. Final Checklist
+
+Task	Status	
+`.gitignore` ignores secrets & big files	✅	
+No .env with real keys	✅	
+Large files tracked via LFS or release	✅	
+MIT license added	✅	
+README with clone-run steps	✅	
+GitHub Actions CI passes	✅	
+
+---
+
+10. Share & Improve
+
+```bash
+# tag a release
+git tag -a v2.0.0 -m "Fully working v2 stack"
+git push origin v2.0.0
+```
+
+→ Go to GitHub repo → Settings → Manage access → invite collaborators
+
+→ open new chat and paste repo URL:
+
+"I want to add Transformer model to https://github.com/YOUR_USER/football-v2-stack – help me!"
+
+🎉 Repo is now public, reproducible, and ready for infinite upgrades!

@@ -1,0 +1,10 @@
+from app.models import get_ensemble
+
+@app.post("/predict", response_model=PredictionOut)
+def predict(p: PredictionIn):
+    rf, trans = get_ensemble()
+    rf_pred = rf.predict_one(p.home_form, p.market_margin, p.home_implied)
+    trans_pred = trans.predict_one(p.home_form, p.market_margin, p.home_implied)
+    # simple ensemble: average
+    ensemble = {k: (rf_pred[k] + trans_pred[k]) / 2 for k in rf_pred}
+    return ensemble

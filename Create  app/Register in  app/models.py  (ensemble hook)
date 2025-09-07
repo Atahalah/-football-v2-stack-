@@ -1,0 +1,16 @@
+# app/models.py  (add at bottom)
+from app.models_transformer import TransformerBaseline
+
+def get_ensemble():
+    rf = get_model()                       # existing Random-Forest
+    trans = TransformerBaseline()
+    if os.path.exists("models/transformer_model.pkl"):
+        trans.model = joblib.load("models/transformer_model.pkl")
+        trans.scaler = joblib.load("models/transformer_scaler.pkl")
+    else:
+        print("[TRANS] training transformer baseline...")
+        df = spark.read.format("delta").load("data/gold/matches").toPandas()
+        X = df[["home_form","market_margin","home_implied"]].fillna(0)
+        y = df["result"].map({"H":2,"D":1,"A":0})
+        trans.fit(X, y)
+    return rf, trans

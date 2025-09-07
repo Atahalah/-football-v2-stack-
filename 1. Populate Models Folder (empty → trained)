@@ -1,0 +1,6 @@
+docker exec -it football-v2-stack-api-1 bash
+./scripts/train.sh
+# exit & commit
+git add models/*.pkl
+git commit -m "Add trained global model"
+git push

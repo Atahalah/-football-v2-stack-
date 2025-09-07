@@ -1,0 +1,6 @@
+docker compose exec api bash
+python -c "from app.models import get_ensemble; get_ensemble()"
+exit
+git add app/models_transformer.py app/models.py requirements.txt
+git commit -m "Add Transformer baseline (TabNet) ensemble"
+git push

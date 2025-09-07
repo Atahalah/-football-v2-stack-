@@ -1,0 +1,3 @@
+# requirements.txt  (append)
+tabnet[torch]==1.1.0
+torch==2.1.2+cpu          # or +cu118 if you have CUDA

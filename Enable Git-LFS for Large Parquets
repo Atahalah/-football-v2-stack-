@@ -1,0 +1,5 @@
+git lfs track "*.pkl"
+git lfs track "data/gold/*.parquet"
+git add .gitattributes
+git commit -m "Track large files with LFS"
+git push

@@ -6,6 +6,8 @@ import { GlobalStats } from './components/GlobalStats';
 import { TacticalInsights } from './components/TacticalInsights';
 import { StrategicInsights } from './components/StrategicInsights';
 import { DataTraining } from './components/DataTraining';
+import { AdvancedAnalytics } from './components/AdvancedAnalytics';
+import { PredictionDashboard } from './components/PredictionDashboard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/Tabs';
 import { predictionService } from './services/PredictionService';
 import { mockMatches } from './data/mockData';
@@ -35,9 +37,11 @@ import { League } from './data/leagues';
 
           <div className="max-w-7xl mx-auto">
             <Tabs defaultValue="predictions" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-6">
+              <TabsList className="grid w-full grid-cols-8">
                 <TabsTrigger value="predictions">Predictions</TabsTrigger>
+                <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
                 <TabsTrigger value="models">Model Analysis</TabsTrigger>
+                <TabsTrigger value="advanced">Advanced</TabsTrigger>
                 <TabsTrigger value="tactical">Tactical</TabsTrigger>
                 <TabsTrigger value="strategic">Strategic</TabsTrigger>
                 <TabsTrigger value="leagues">Leagues</TabsTrigger>
@@ -53,7 +57,18 @@ import { League } from './data/leagues';
                 homeTeam={selectedMatch.homeTeam}
                 awayTeam={selectedMatch.awayTeam}
                 insights={tacticalInsights}
+            <TabsContent value="dashboard" className="space-y-6">
+              <PredictionDashboard 
+                match={selectedMatch}
+                predictions={predictions}
               />
+            </TabsContent>
+
+              />
+            </TabsContent>
+            
+            <TabsContent value="advanced" className="space-y-6">
+              <AdvancedAnalytics match={selectedMatch} />
             </TabsContent>
             
             <TabsContent value="strategic" className="space-y-6">

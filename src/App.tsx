@@ -8,6 +8,7 @@ import { StrategicInsights } from './components/StrategicInsights';
 import { DataTraining } from './components/DataTraining';
 import { AdvancedAnalytics } from './components/AdvancedAnalytics';
 import { PredictionDashboard } from './components/PredictionDashboard';
+import { LiveMatches } from './components/LiveMatches';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/Tabs';
 import { predictionService } from './services/PredictionService';
 import { mockMatches } from './data/mockData';
@@ -37,8 +38,9 @@ import { League } from './data/leagues';
 
           <div className="max-w-7xl mx-auto">
             <Tabs defaultValue="predictions" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-8">
+              <TabsList className="grid w-full grid-cols-9">
                 <TabsTrigger value="predictions">Predictions</TabsTrigger>
+                <TabsTrigger value="live">Live Matches</TabsTrigger>
                 <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
                 <TabsTrigger value="models">Model Analysis</TabsTrigger>
                 <TabsTrigger value="advanced">Advanced</TabsTrigger>
@@ -62,6 +64,10 @@ import { League } from './data/leagues';
                 match={selectedMatch}
                 predictions={predictions}
               />
+            </TabsContent>
+
+            <TabsContent value="live" className="space-y-6">
+              <LiveMatches />
             </TabsContent>
 
               />

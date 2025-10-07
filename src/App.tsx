@@ -11,6 +11,7 @@ import { DataTraining } from './components/DataTraining';
 import { AdvancedAnalytics } from './components/AdvancedAnalytics';
 import { PredictionDashboard } from './components/PredictionDashboard';
 import { LiveMatches } from './components/LiveMatches';
+import { BettingMarkets } from './components/BettingMarkets';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/Tabs';
 import { predictionService } from './services/PredictionService';
 import { mockMatches } from './data/mockData';
@@ -48,10 +49,11 @@ import { League } from './data/leagues';
 
           <div className="max-w-7xl mx-auto">
             <Tabs defaultValue="predictions" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-11">
+              <TabsList className="grid w-full grid-cols-12">
                 <TabsTrigger value="predictions">Predictions</TabsTrigger>
                 <TabsTrigger value="live">Live Matches</TabsTrigger>
                 <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+                <TabsTrigger value="betting">Betting Markets</TabsTrigger>
                 <TabsTrigger value="models">Model Analysis</TabsTrigger>
                 <TabsTrigger value="config">Configuration</TabsTrigger>
                 <TabsTrigger value="advanced">Advanced</TabsTrigger>
@@ -87,6 +89,13 @@ import { League } from './data/leagues';
 
             <TabsContent value="live" className="space-y-6">
               <LiveMatches />
+            </TabsContent>
+
+            <TabsContent value="betting" className="space-y-6">
+              <BettingMarkets 
+                match={selectedMatch}
+                basePrediction={predictions['Machine Learning'] || predictions[Object.keys(predictions)[0]]}
+              />
             </TabsContent>
 
               />

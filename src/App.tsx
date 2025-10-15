@@ -12,13 +12,10 @@ import { AdvancedAnalytics } from './components/AdvancedAnalytics';
 import { PredictionDashboard } from './components/PredictionDashboard';
 import { LiveMatches } from './components/LiveMatches';
 import { BettingMarkets } from './components/BettingMarkets';
-import { AIAssistant } from './components/AIAssistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/Tabs';
 import { predictionService } from './services/PredictionService';
-import { AIAssistantService } from './services/AIAssistantService';
 import { mockMatches } from './data/mockData';
 import { League } from './data/leagues';
-import { ChatMessage } from './types';
 
   const [selectedMatch, setSelectedMatch] = useState<Match>(mockMatches[0]);
   const [selectedLeague, setSelectedLeague] = useState<League | undefined>();
@@ -34,10 +31,6 @@ import { ChatMessage } from './types';
   const [predictions, setPredictions] = useState<Record<string, Prediction>>({});
   const [tacticalInsights, setTacticalInsights] = useState<any>(null);
   const [strategicInsights, setStrategicInsights] = useState<any>(null);
-  const [aiAssistantService] = useState(() => new AIAssistantService(predictionService));
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
-    { sender: 'ai', text: "Hello! I'm your AI Assistant. How can I help you with this match?" }
-  ]);
 
   const filteredMatches = selectedLeague 
     ? mockMatches.filter(match => match.league === selectedLeague.name)
@@ -54,18 +47,9 @@ import { ChatMessage } from './types';
     setStrategicInsights(strategic);
   }, [selectedMatch]);
 
-  const handleSendMessage = async (message: string) => {
-    const userMessage: ChatMessage = { sender: 'user', text: message };
-    setChatMessages(prevMessages => [...prevMessages, userMessage]);
-
-    const aiResponse = await aiAssistantService.getResponse(message, selectedMatch);
-    const aiMessage: ChatMessage = { sender: 'ai', text: aiResponse };
-    setChatMessages(prevMessages => [...prevMessages, aiMessage]);
-  };
-
           <div className="max-w-7xl mx-auto">
             <Tabs defaultValue="predictions" className="space-y-6">
-              <TabsList className="flex w-full overflow-x-auto whitespace-nowrap">
+              <TabsList className="grid w-full grid-cols-12">
                 <TabsTrigger value="predictions">Predictions</TabsTrigger>
                 <TabsTrigger value="live">Live Matches</TabsTrigger>
                 <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
@@ -78,15 +62,7 @@ import { ChatMessage } from './types';
                 <TabsTrigger value="leagues">Leagues</TabsTrigger>
                 <TabsTrigger value="league-stats">League Stats</TabsTrigger>
                 <TabsTrigger value="training">Data Training</TabsTrigger>
-                <TabsTrigger value="ai-assistant">AI Assistant</TabsTrigger>
               </TabsList>
-
-            <TabsContent value="ai-assistant" className="space-y-6">
-              <AIAssistant
-                messages={chatMessages}
-                onSendMessage={handleSendMessage}
-              />
-            </TabsContent>
 
             <TabsContent value="models" className="space-y-6">
               <ModelBreakdown predictions={predictions} />

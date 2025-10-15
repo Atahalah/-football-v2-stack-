@@ -91,8 +91,3 @@ export interface TeamStats {
   cleanSheets: number;
   failedToScore: number;
 }
-
-export interface ChatMessage {
-  sender: 'user' | 'ai';
-  text: string;
-}

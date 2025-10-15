@@ -1,3 +1,7 @@
+/**
+ * Advanced Tactical Analysis Model
+ * Analyzes team formations, playing styles, and tactical matchups
+ */
 import { BaseModel } from './BaseModel';
 import { Match, Prediction, TeamStats } from '../types';
 
@@ -70,6 +74,48 @@ export class TacticalModel extends BaseModel {
     this.tacticalDatabase.set('Tottenham', {
       formation: '3-5-2',
       attackingStyle: 'direct',
+      defensiveStyle: 'pressing',
+      tempo: 'fast',
+      width: 'wide'
+    });
+
+    // La Liga teams
+    this.tacticalDatabase.set('Real Madrid', {
+      formation: '4-3-3',
+      attackingStyle: 'counter',
+      defensiveStyle: 'compact',
+      tempo: 'fast',
+      width: 'wide'
+    });
+
+    this.tacticalDatabase.set('Barcelona', {
+      formation: '4-3-3',
+      attackingStyle: 'possession',
+      defensiveStyle: 'high-line',
+      tempo: 'medium',
+      width: 'wide'
+    });
+
+    this.tacticalDatabase.set('Atletico Madrid', {
+      formation: '3-5-2',
+      attackingStyle: 'counter',
+      defensiveStyle: 'deep-block',
+      tempo: 'slow',
+      width: 'narrow'
+    });
+
+    // Bundesliga teams
+    this.tacticalDatabase.set('Bayern Munich', {
+      formation: '4-2-3-1',
+      attackingStyle: 'possession',
+      defensiveStyle: 'high-line',
+      tempo: 'fast',
+      width: 'wide'
+    });
+
+    this.tacticalDatabase.set('Borussia Dortmund', {
+      formation: '4-3-3',
+      attackingStyle: 'pressing',
       defensiveStyle: 'pressing',
       tempo: 'fast',
       width: 'wide'

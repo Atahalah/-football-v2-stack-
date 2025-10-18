@@ -6,7 +6,17 @@ export class BettingMarketsModel extends BaseModel {
     super('Betting Markets Analysis');
   }
 
-  predict(match: Match, basePrediction: Prediction): BettingMarketPrediction {
+  predict(match: Match): Prediction {
+    return {
+      homeWin: 0.4,
+      draw: 0.25,
+      awayWin: 0.35,
+      confidence: 0.7,
+      expectedGoals: { home: 1.3, away: 1.1 }
+    };
+  }
+
+  predictMarkets(match: Match, basePrediction: Prediction): BettingMarketPrediction {
     const { homeWin, draw, awayWin, expectedGoals } = basePrediction;
     const homeGoals = expectedGoals?.home || 1.3;
     const awayGoals = expectedGoals?.away || 1.1;
